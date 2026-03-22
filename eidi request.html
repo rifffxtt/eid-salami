@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>রিফাতের ইদ সালামি হান্টার 🌙</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
+        
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background: #fff5f8;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; 
+            padding: 15px;
+        }
+
+        /* Music Button */
+        .music-btn {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 1000;
+            background: #ff4081;
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Floating Items */
+        .floating-item {
+            position: absolute;
+            top: -50px;
+            font-size: 24px;
+            z-index: 1;
+            animation: fall linear infinite;
+            pointer-events: none;
+        }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+        .card {
+            background: rgba(255, 255, 255, 0.98);
+            width: 100%;
+            max-width: 360px;
+            padding: 25px 20px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(216, 27, 96, 0.1);
+            text-align: center;
+            border: 2px solid #ff4081;
+            position: relative;
+            z-index: 10;
+        }
+
+        .greeting { color: #d81b60; font-size: 26px; font-weight: 700; margin-bottom: 5px; }
+        
+        .warning-box {
+            background: #fff0f0;
+            border: 1px solid #ffcccc;
+            padding: 8px;
+            font-size: 13px;
+            color: #d32f2f;
+            margin-bottom: 15px;
+            border-radius: 12px;
+        }
+
+        .calculator {
+            background: #fff9fb;
+            padding: 12px;
+            border-radius: 18px;
+            margin-bottom: 15px;
+            border: 1px solid #ffe4ed;
+        }
+        .calc-title { font-weight: 700; color: #d81b60; font-size: 14px; margin-bottom: 8px; display: block; }
+        
+        .amount-btns { display: flex; gap: 5px; }
+        .amt-btn {
+            flex: 1;
+            background: white;
+            border: 1.5px solid #ff4081;
+            padding: 8px 2px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        #reaction-text { font-size: 13px; margin-top: 8px; color: #c2185b; font-weight: 600; height: 18px; }
+
+        .mfs-box { display: flex; flex-direction: column; gap: 10px; }
+        
+        .btn {
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-weight: 700;
+            font-size: 17px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            cursor: pointer;
+        }
+        .bkash { background: #e2136e; }
+        .nagad { background: #f7941d; }
+        .rocket { background: #8c3494; }
+
+        #display-section { display: none; }
+        
+        .number-card {
+            background: #fffdfd;
+            padding: 15px;
+            border-radius: 18px;
+            border: 2px dashed #ff4081;
+            margin: 12px 0;
+        }
+        .phone-num { font-size: 24px; font-weight: 800; color: #d81b60; user-select: all; }
+
+        #thanks-modal {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            width: 85%;
+            max-width: 300px;
+            text-align: center;
+            z-index: 100;
+            border: 2px solid #ff4081;
+        }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 90; }
+    </style>
+</head>
+<body>
+
+<audio id="eidMusic" loop>
+    <source src="8bit-eid.mp3" type="audio/mpeg">
+</audio>
+<button class="music-btn" id="musicBtn" onclick="toggleMusic()">🔇</button>
+
+<div id="animation-container"></div>
+<div class="overlay" id="overlay"></div>
+
+<div class="card">
+    <div class="greeting">আসসালামু আলাইকুম! 🌙</div>
+    
+    <div class="warning-box">
+        <b>হুঁশিয়ারি:</b> সালামি না দিলে আপনার ইদের সেমাই আর বিরিয়ানি সব রিফাত একা খেয়ে ফেলবে! 😈
+    </div>
+
+    <div class="calculator">
+        <span class="calc-title">কত টাকা সালামি দিবেন? 💸</span>
+        <div class="amount-btns">
+            <button class="amt-btn" onclick="react(100)">১০০৳</button>
+            <button class="amt-btn" onclick="react(500)">৫০০৳</button>
+            <button class="amt-btn" onclick="react(1000)">১০০০৳+</button>
+        </div>
+        <div id="reaction-text"></div>
+    </div>
+    
+    <div id="main-content">
+        <p style="font-size: 15px; color: #444; margin-bottom: 15px;">রিফাত আজ শুধু নেবে, কিছু দেবে না! <br>ঝটপট সালামি পাঠিয়ে দিন ❤️</p>
+        <div class="mfs-box">
+            <button class="btn bkash" onclick="showNumber('বিকাশ', '01975533591')">বিকাশ সালামি 💸</button>
+            <button class="btn nagad" onclick="showNumber('নগদ', '01747393062')">নগদ সালামি 🎁</button>
+            <button class="btn rocket" onclick="showNumber('রকেট', '01576941172')">রকেট সালামি ✨</button>
+        </div>
+    </div>
+
+    <div id="display-section">
+        <h3 id="method-name" style="color:#d81b60; font-size: 18px;"></h3>
+        <div class="number-card">
+            <span style="font-size: 12px; color: #888;">নাম্বার কপি করতে ট্যাপ করে ধরুন</span>
+            <span class="phone-num" id="target-number"></span>
+        </div>
+        <button class="btn bkash" onclick="showThanks()">পাঠানো শেষ! ✅</button>
+        <p onclick="goBack()" style="color:#777; margin-top:12px; font-weight:600; text-decoration:underline; font-size:13px; cursor:pointer;">অন্য মাধ্যমে দেবো</p>
+    </div>
+</div>
+
+<div id="thanks-modal">
+    <h2 style="color: #d81b60;">ইদ মোবারক! 😍</h2>
+    <p>রিফাতের পক্ষ থেকে এক বালতি ভালোবাসা আর তিন বালতি দুআ! 💖</p>
+    <button class="amt-btn" style="width: 100%; background:#ff4081; color:white; margin-top:15px; border:none; padding:10px; border-radius:10px;" onclick="closeModal()">ওকে!</button>
+</div>
+
+<script>
+    const music = document.getElementById('eidMusic');
+    const musicBtn = document.getElementById('musicBtn');
+
+    function toggleMusic() {
+        if (music.paused) {
+            music.play();
+            musicBtn.innerText = "🔊";
+            musicBtn.style.background = "#4CAF50";
+        } else {
+            music.pause();
+            musicBtn.innerText = "🔇";
+            musicBtn.style.background = "#ff4081";
+        }
+    }
+
+    function createAnimation() {
+        const container = document.getElementById('animation-container');
+        const items = ['🌙', '⭐', '৳', '💵', '💖'];
+        const item = document.createElement('div');
+        item.classList.add('floating-item');
+        item.innerText = items[Math.floor(Math.random() * items.length)];
+        item.style.left = Math.random() * 95 + 'vw';
+        item.style.animationDuration = (Math.random() * 2 + 3) + 's';
+        container.appendChild(item);
+        setTimeout(() => item.remove(), 5000);
+    }
+    setInterval(createAnimation, 600); 
+
+    function react(amount) {
+        const text = document.getElementById('reaction-text');
+        if(amount === 100) text.innerText = "এত কৃপণ কেন? আরেকটু বাড়িয়ে দিন! 😒";
+        else if(amount === 500) text.innerText = "হুমম চলবে, কিন্তু রিফাত আরও আশা করেছিল! 🤔";
+        else if(amount === 1000) text.innerText = "আপনিই তো আসল মানুষ! জান্নাতী লোক! 😍✨";
+    }
+
+    function showNumber(method, number) {
+        document.getElementById('main-content').style.display = 'none';
+        document.getElementById('display-section').style.display = 'block';
+        document.getElementById('method-name').innerText = "রিফাতের " + method + " নাম্বার";
+        document.getElementById('target-number').innerText = number;
+    }
+
+    function goBack() {
+        document.getElementById('main-content').style.display = 'block';
+        document.getElementById('display-section').style.display = 'none';
+    }
+
+    function showThanks() {
+        document.getElementById('thanks-modal').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('thanks-modal').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+        goBack();
+    }
+</script>
+
+</body>
+</html>
